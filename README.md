@@ -40,7 +40,7 @@ _Provide a quote from a hypothetical customer that describes how they experience
 
 "I always had a fear of downloading malicious contents from websites, after using this service offered by Glasswall, I now know if I am at risk of any malicious content being downloaded to my machine, prior to clicking on the website! I feel a lot safer."
 
-or maybe.. I know my website is clean and wont infect anyone else. giving my customers confidence they can trust us/me
+"I know my website is clean and wont infect anyone else. giving my customers confidence they can trust us/me"
 
 # Closing and Call to Action 
 _Wrap it up and give pointers where the reader should go next._\
