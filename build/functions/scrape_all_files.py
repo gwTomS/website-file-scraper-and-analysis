@@ -1,8 +1,14 @@
 import urllib3
+import os
 from bs4 import BeautifulSoup
+from pathlib import Path
 
 def get_base_url(url):
     return url.rsplit('/', 1)[0]
+
+def path_leaf(path):
+    head, tail = os.path.split(path)
+    return tail or os.path.basename(head)
 
 def get_all_links_from_url(url, connection):
     base_url = get_base_url(url)
@@ -39,36 +45,42 @@ def get_all_files_on_page(url):
 
     header = html.info()
 
+    # TODO: Non image files
     if 'Content-Disposition' in str( header ):
         filename = './' + html.info()['Content-Disposition'].split( '=' )[-1].strip( '"' )
         file_names.append(filename)
 
     return file_names
 
-def download_files(file_path, base_url):
-    file_url = base_url + file_path
+def download_file(file_path, base_url, download_path):
+    if file_path.startswith('/'):
+        file_url = base_url + file_path
+    else:
+        file_url = file_path
 
-    f = connection.request('GET', file_url).data.read()
+    f = connection.request('GET', file_url).data
 
-    with open('./images/' + file_path, "wb") as code:
+    Path(download_path).mkdir(parents=True, exist_ok=True)
+
+    with open(download_path + '/' + path_leaf(file_path), "wb") as code:
             code.write(f)
+
+
 
 
 connection = urllib3.PoolManager(1)
 
 url = 'https://glasswallsolutions.com/'
 base_url = get_base_url(url)
+base_download_path = './files'
 
 page_links = get_all_links_from_url(url, connection)
 
-first_page_filenames = get_all_files_on_page(page_links[0])
+for page in page_links:
+    print('Processing: ' + page)
+    filenames = get_all_files_on_page(page)
 
-download_files(first_page_filenames[0], base_url)
-
-
-
-
-
-# print(f'\nInternal Links in https://glasswallsolutions.com/.\n' + '='*100)
-# for link in page_links:
-#     print(link)
+    for filename in filenames:
+        download_file(filename, base_url, base_download_path)
+    
+    print('\n')
