@@ -89,6 +89,8 @@ for link in first_page_links:
     all_links.extend(get_all_links_from_url(link, connection))
     print(f'Retrieving links from: {link}')
 
+all_links = list(dict.fromkeys(all_links))
+
 all_internal_links = list()
 for link in all_links:
     if link.startswith(base_url):
