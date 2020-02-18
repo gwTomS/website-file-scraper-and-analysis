@@ -80,7 +80,12 @@ def download_file(file_path, base_url, download_path):
 
 connection = urllib3.PoolManager(1)
 
-url = "https://systmonline.tpp-uk.com/2/"
+url = "https://systmonline.tpp-uk.com/"
+req_url = connection.request("GET", url).geturl()
+
+if req_url != url:
+    url = url + '/' + req_url
+
 base_url = get_base_url(url)
 base_download_path = "./sysfiles"
 
