@@ -55,14 +55,18 @@ def get_all_files_on_page(url):
     for image in images:
         file_names.append(image.get("src"))
 
+    inputs = soup.findAll("input")
+    for input in inputs:
+        file_names.append(input.get("src"))
+
     header = page.info()
 
     return file_names
 
 
 def download_file(file_path, base_url, download_path):
-    if file_path.startswith("/"):
-        file_url = base_url + file_path
+    if file_path.startswith("/") or not file_path.startswith(base_url):
+        file_url = base_url + "/" + file_path
     else:
         file_url = file_path
 
@@ -76,11 +80,14 @@ def download_file(file_path, base_url, download_path):
 
 connection = urllib3.PoolManager(1)
 
-url = "https://glasswallsolutions.com/"
+url = "https://systmonline.tpp-uk.com/2/"
 base_url = get_base_url(url)
-base_download_path = "./files"
+base_download_path = "./sysfiles"
 
 first_page_links = get_all_links_from_url(url, connection)
+
+if not first_page_links: 
+    first_page_links.append(url)
 
 all_links = list()
 all_links.extend(first_page_links)
